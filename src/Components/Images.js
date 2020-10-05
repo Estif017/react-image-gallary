@@ -2,9 +2,12 @@ import React, { useState, useContext } from 'react';
 import { Context } from './Context';
 import PropTypes from 'prop-types';
 
-export const Images = ({ className, img, id }) => {
-	const { toggleFavorite, addToCart } = useContext(Context);
+export const Images = ({ className, img }) => {
+	const { toggleFavorite, addToCart, cartItems, removeFromCart } = useContext(
+		Context
+	);
 	const [hovered, setHovered] = useState(false);
+	const alreadyInCart = cartItems.some((item) => item.id === img.id);
 	const heartIcon = hovered && (
 		<i
 			onClick={() => {
@@ -14,9 +17,28 @@ export const Images = ({ className, img, id }) => {
 				!img.isFavorite ? `ri-heart-line favorite` : `ri-heart-fill favorite`
 			}></i>
 	);
-	const cartIcon = hovered && (
-		<i onClick={() => addToCart(img)} className='ri-add-circle-line cart'></i>
-	);
+
+	const cartIcon = () => {
+		if (hovered) {
+			if (!alreadyInCart) {
+				return (
+					<i
+						onClick={() => {
+							addToCart(img);
+						}}
+						className='ri-add-circle-line cart'></i>
+				);
+			} else {
+				return (
+					<i
+						onClick={() => {
+							removeFromCart(img.id);
+						}}
+						className='ri-shopping-cart-fill cart'></i>
+				);
+			}
+		}
+	};
 	return (
 		<div
 			className={`${className} image-container`}
@@ -28,7 +50,7 @@ export const Images = ({ className, img, id }) => {
 			}}>
 			<img src={`${img.url}`} className='image-grid' alt='img' />
 			{heartIcon}
-			{cartIcon}
+			{cartIcon()}
 		</div>
 	);
 };
