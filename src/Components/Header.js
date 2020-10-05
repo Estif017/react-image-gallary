@@ -4,7 +4,6 @@ import { Context } from './Context';
 
 export const Header = () => {
 	const { cartItems } = useContext(Context);
-	console.log('header ', cartItems.length);
 	return (
 		<header>
 			<Link to='/'>
